@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151101202823) do
+ActiveRecord::Schema.define(version: 20151101225128) do
 
   create_table "lyrics_sets", force: :cascade do |t|
     t.string   "times"
@@ -48,9 +48,9 @@ ActiveRecord::Schema.define(version: 20151101202823) do
     t.integer  "upvotes"
     t.integer  "downvotes"
     t.integer  "song_id"
-    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
   end
 
   add_index "tabs_sets", ["song_id"], name: "index_tabs_sets_on_song_id"
