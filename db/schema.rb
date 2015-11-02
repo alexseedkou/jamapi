@@ -13,9 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20151101202823) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "lyrics_sets", force: :cascade do |t|
-    t.string   "times"
-    t.string   "lyrics"
+    t.string   "times",                   array: true
+    t.string   "lyrics",                  array: true
     t.integer  "upvotes"
     t.integer  "downvotes"
     t.integer  "song_id"
@@ -24,8 +27,8 @@ ActiveRecord::Schema.define(version: 20151101202823) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "lyrics_sets", ["song_id"], name: "index_lyrics_sets_on_song_id"
-  add_index "lyrics_sets", ["user_id"], name: "index_lyrics_sets_on_user_id"
+  add_index "lyrics_sets", ["song_id"], name: "index_lyrics_sets_on_song_id", using: :btree
+  add_index "lyrics_sets", ["user_id"], name: "index_lyrics_sets_on_user_id", using: :btree
 
   create_table "songs", force: :cascade do |t|
     t.string   "title"
@@ -36,15 +39,15 @@ ActiveRecord::Schema.define(version: 20151101202823) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "songs", ["artist"], name: "index_songs_on_artist"
-  add_index "songs", ["title"], name: "index_songs_on_title"
+  add_index "songs", ["artist"], name: "index_songs_on_artist", using: :btree
+  add_index "songs", ["title"], name: "index_songs_on_title", using: :btree
 
   create_table "tabs_sets", force: :cascade do |t|
     t.string   "tuning"
     t.integer  "capo"
-    t.string   "times"
-    t.string   "chords"
-    t.string   "tabs"
+    t.string   "times",                   array: true
+    t.string   "chords",                  array: true
+    t.string   "tabs",                    array: true
     t.integer  "upvotes"
     t.integer  "downvotes"
     t.integer  "song_id"
@@ -53,8 +56,8 @@ ActiveRecord::Schema.define(version: 20151101202823) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "tabs_sets", ["song_id"], name: "index_tabs_sets_on_song_id"
-  add_index "tabs_sets", ["user_id"], name: "index_tabs_sets_on_user_id"
+  add_index "tabs_sets", ["song_id"], name: "index_tabs_sets_on_song_id", using: :btree
+  add_index "tabs_sets", ["user_id"], name: "index_tabs_sets_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
@@ -65,4 +68,8 @@ ActiveRecord::Schema.define(version: 20151101202823) do
     t.string   "password_digest"
   end
 
+  add_foreign_key "lyrics_sets", "songs"
+  add_foreign_key "lyrics_sets", "users"
+  add_foreign_key "tabs_sets", "songs"
+  add_foreign_key "tabs_sets", "users"
 end
