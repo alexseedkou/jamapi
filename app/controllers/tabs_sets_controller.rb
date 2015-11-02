@@ -20,7 +20,4 @@ class TabsSetsController < ApplicationController
     @tabs_set = TabsSet.find(params[:id])
   end
 
-  # def tabs_set_params
-  #   params.require(:post).permit(:title, :artist, :album)
-  # end
 end

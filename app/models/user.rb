@@ -10,4 +10,7 @@ class User < ActiveRecord::Base
                     :length => { :maximum => 100 },
                     :format => EMAIL_REGEX,
                     :uniqueness => true
+
+  has_many :tabs_sets
+  has_many :lyrics_sets
 end
