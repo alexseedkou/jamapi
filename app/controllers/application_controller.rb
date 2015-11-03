@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
-  
+  #example in command line
+  #curl http://localhost:3000/songs -H 'Authorization: Token token=d002e15d331a6e1e35092ca191a4a
   include ActionController::HttpAuthentication::Basic::ControllerMethods
   include ActionController::HttpAuthentication::Token::ControllerMethods
   before_filter :authenticate_user_from_token, except: [:token]
