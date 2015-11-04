@@ -14,6 +14,16 @@ class SongsController < ApplicationController
     render json: @song
   end
 
+  def create
+    
+    @song = Song.new(song_params)
+    if @song.save
+      render json: @song, status: :created, location: @song
+    else
+      render json: @song.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_song
@@ -21,6 +31,6 @@ class SongsController < ApplicationController
   end
 
   def song_params
-    params.require(:post).permit(:title, :artist, :album)
+    params.require(:song).permit(:title, :artist, :album, :times, :chords, :tabs, :song_id)
   end
 end
