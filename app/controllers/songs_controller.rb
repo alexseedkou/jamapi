@@ -4,10 +4,11 @@ class SongsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    if params[:query].present?
-      @songs = Song.search(params[:query])
+    # do search later
+    # if params[:query].present?
+    #   @songs = Song.search(params[:query])
       #TODO: this is very bad to initialize the database, needs a better way, what if capital case
-    elsif params[:title].present? && params[:artist].present? && params[:album].present?
+    if params[:title].present? && params[:artist].present? && params[:album].present?
       @songs = Song.where("title LIKE ? AND artist LIKE ? AND album LIKE ?",
       params[:title], params[:artist], params[:album])
       if @songs.size == 0 #song not in database yet
