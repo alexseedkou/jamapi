@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem "searchkick"
+
 gem 'active_model_serializers', '~> 0.8.3'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
