@@ -4,7 +4,12 @@ class TabsSetsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @tabs_sets = TabsSet.all
+    if params[:song_id].present?
+      @tabs_sets = TabsSet.where(:song_id => params[:song_id])
+    else
+      @tabs_sets = TabsSet.all
+    end
+    #we never show the entire database of tabs, this is just for testing
     render json: @tabs_sets
   end
 
