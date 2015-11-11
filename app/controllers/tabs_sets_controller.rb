@@ -1,6 +1,9 @@
 class TabsSetsController < ApplicationController
   before_action :set_tabs_set, only: [:show, :update, :destroy]
 
+  # we don't need user to index and show, but we need user to create,
+  # and the matched user to update and delete
+
   # GET /posts
   # GET /posts.json
   def index
@@ -42,4 +45,5 @@ class TabsSetsController < ApplicationController
   def tabs_sets_params
     params.require(:tabs_set).permit(:tuning, :capo, :song_id, :times => [], :chords => [], :tabs=> [])
   end
+
 end

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :songs, except: [:new, :edit]
   resources :tabs_sets, except: [:new, :edit]
   resources :lyrics_sets, except: [:new, :edit]
+  
+  match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
