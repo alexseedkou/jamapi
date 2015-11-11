@@ -45,5 +45,4 @@ class TabsSetsController < ApplicationController
   def tabs_sets_params
     params.require(:tabs_set).permit(:tuning, :capo, :song_id, :times => [], :chords => [], :tabs=> [])
   end
-
 end

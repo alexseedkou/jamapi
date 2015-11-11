@@ -1,9 +1,6 @@
 class AccessController < ApplicationController
 
-  def index
-    render json: @found_user
-  end
-
+  # GET /access/validate_email?email=example@email.com
   def validate_email
     if params[:email].present?
       u = User.new
@@ -18,6 +15,7 @@ class AccessController < ApplicationController
     end
   end
 
+ # GET /access/validate_username?username=example
   def validate_username
     if params[:username].present?
       u = User.new
@@ -32,6 +30,8 @@ class AccessController < ApplicationController
     end
   end
 
+  # isn't this a POST?
+  # GET /access/sign_up?username=example&email=example@email.com&password=yourpassword
   def sign_up
     if params[:email].present? && params[:username].present? && params[:password].present?
       newUser = User.new(:email => params[:email], :username => params[:username], :password => params[:password])
@@ -43,17 +43,18 @@ class AccessController < ApplicationController
     end
   end
 
+  # GET /access/attempt_login
   def attempt_login
     #user can log in with either email or username
     if params[:email].present? && params[:password].present?
-      @found_user = User.where(:email => params[:email]).first
-      if @found_user
-        authorized_user = @found_user.authenticate(params[:password])
+      found_user = User.where(:email => params[:email]).first
+      if found_user
+        authorized_user = found_user.authenticate(params[:password])
       end
     elsif params[:username].present? && params[:password].present?
-      @found_user = User.where(:username => params[:username]).first
-      if @found_user
-        authorized_user = @found_user.authenticate(params[:password])
+      found_user = User.where(:username => params[:username]).first
+      if found_user
+        authorized_user = found_user.authenticate(params[:password])
       end
     end
     if authorized_user
