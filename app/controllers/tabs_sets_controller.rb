@@ -8,9 +8,10 @@ class TabsSetsController < ApplicationController
   # GET /posts.json
   def index
     if params[:song_id].present?
-      @tabs_sets = TabsSet.where(:song_id => params[:song_id])
+      @tabs_sets = TabsSet.where(:song_id => params[:song_id]).sortedByVotes
     else
-      @tabs_sets = TabsSet.all
+      #should is for testing only
+      @tabs_sets = TabsSet.all.sortedByVotes
     end
     #we never show the entire database of tabs, this is just for testing
     render json: @tabs_sets
