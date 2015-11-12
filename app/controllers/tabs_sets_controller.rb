@@ -20,7 +20,8 @@ class TabsSetsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    render json: @tabs_set
+    #show times, chords, and tabs of the particular tabsSet
+    render json: @tabs_set, serializer: TabsSetContentSerializer
   end
 
   # POST /posts
