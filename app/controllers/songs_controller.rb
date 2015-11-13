@@ -4,25 +4,24 @@ class SongsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    # do search later
-    # if params[:query].present?
-    #   @songs = Song.search(params[:query])
-      #TODO: this is very bad to initialize the database, needs a better way, what if capital case
-    if params[:title].present? && params[:artist].present? && params[:album].present?
-      @songs = Song.where("title LIKE ? AND artist LIKE ? AND album LIKE ?",
-      params[:title], params[:artist], params[:album])
-      if @songs.size == 0 #song not in database yet
-        puts "no song found"
-        #then initialize this song
-        newSong = Song.new(title: params[:title], artist: params[:artist], album: params[:album])
-        if newSong.save
-          puts "new song created with and ID #{newSong.id}"
-        end
+    if params[:title].present? && params[:artist].present? && params[:duration].present?
+      # check if we already have this song,
+      # name, artist must exactly match and
+      # the duration should be in one second range
+      # of the one we have in database
+      matchedSong = Song.where("title = ? AND artist = ? AND ( duration BETWEEN ? AND ? )",
+      params[:title], params[:artist], params[:duration].to_f - 1, params[:duration].to_f + 1)
+
+      if matchedSong.exists?
+        @song = matchedSong
+      else
+        @song = Song.create(title: params[:title], artist: params[:artist], duration: params[:duration].to_f)
       end
+      render json: @song
     else
-      @songs = Song.all
+      # for testing only
+      render json: Song.all
     end
-    render json: @songs
   end
 
   # GET /posts/1
@@ -47,6 +46,6 @@ class SongsController < ApplicationController
   end
 
   def song_params
-    params.require(:song).permit(:title, :artist, :album)
+    params.require(:song).permit(:title, :artist, :duration)
   end
 end
