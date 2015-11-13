@@ -1,5 +1,6 @@
 class TabsSetsController < ApplicationController
   before_action :set_tabs_set, only: [:show, :update, :destroy]
+  before_action :find_first_or_create, only: [:get_tabs_sets]
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
@@ -37,8 +38,17 @@ class TabsSetsController < ApplicationController
     end
   end
 
-  private
+  # GET server/get_tabs_sets
+  def get_tabs_sets
+    if @song.nil?
+      render json: { error: "Invalid parameters" }, status: 422
+    else
+      #
+      render json: @song.tabs_sets
+    end
+  end
 
+  private
   def set_tabs_set
     @tabs_set = TabsSet.find(params[:id])
   end

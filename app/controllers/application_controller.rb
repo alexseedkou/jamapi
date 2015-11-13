@@ -32,4 +32,23 @@ class ApplicationController < ActionController::API
 #         return true
 #       end
 #     end
+  private
+    #used in tabs_sets_controller and lyrics_sets_controller to find the song, if not found, create the song
+    
+    def find_first_or_create
+      if params[:title].present? && params[:artist].present? && params[:duration].present?
+        # check if we already have this song,
+        # name, artist must exactly match and
+        # the duration should be in one second range
+        # of the one we have in database
+        matchedSongs = Song.where("title = ? AND artist = ? AND ( duration BETWEEN ? AND ? )",
+        params[:title], params[:artist], params[:duration].to_f - 1, params[:duration].to_f + 1)
+
+        if matchedSongs.exists?
+          @song = matchedSongs.first
+        else
+          @song = Song.create(title: params[:title], artist: params[:artist], duration: params[:duration].to_f)
+        end
+      end
+    end
 end
