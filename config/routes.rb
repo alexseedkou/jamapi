@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :tabs_sets, except: [:new, :edit]
   resources :lyrics_sets, except: [:new, :edit]
 
-  get 'findsongorcreate', to: 'songs#find_first_or_create'
+  get 'get_tabs_sets', to: 'songs#get_tabs_sets'
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,6 +1,5 @@
 class TabsSetsController < ApplicationController
   before_action :set_tabs_set, only: [:show, :update, :destroy]
-
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
