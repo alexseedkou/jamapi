@@ -33,7 +33,8 @@ class TabsSetsController < ApplicationController
       render json: { error: "Invalid parameters" }, status: 422
     else
       @tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
-       :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :song_id => @song.id)
+       :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
+        :song_id => @song.id, :user_id => params[:user_id])
       if @tabs_set.save
         render json: @tabs_set, status: :created, location: @tabs_set
       else
