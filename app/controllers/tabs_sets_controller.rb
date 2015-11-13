@@ -1,6 +1,6 @@
 class TabsSetsController < ApplicationController
   before_action :set_tabs_set, only: [:show, :update, :destroy]
-  before_action :find_first_or_create, only: [:get_tabs_sets]
+  before_action :find_first_or_create, only: [:get_tabs_sets, :create]
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
@@ -27,20 +27,25 @@ class TabsSetsController < ApplicationController
   # POST /posts
   # POST /posts.json
 
-  #this is always called after checking if a song exists,
-  #if it doesn't, it creates a new one and return a song_id
+  # find_first_or_create is called to find song_id before create
   def create
-    @tabs_set = TabsSet.new(tabs_sets_params)
-    if @tabs_set.save
-      render json: @tabs_set, status: :created, location: @tabs_set
+    if @song.nil?
+      render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @tabs_set.errors, status: :unprocessable_entity
+      @tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
+       :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :song_id => @song.id)
+      if @tabs_set.save
+        render json: @tabs_set, status: :created, location: @tabs_set
+      else
+        render json: @tabs_set.errors, status: :unprocessable_entity
+      end
     end
   end
 
   # GET server/get_tabs_sets
   def get_tabs_sets
     if @song.nil?
+
       render json: { error: "Invalid parameters" }, status: 422
     else
       render json: @song.tabs_sets
