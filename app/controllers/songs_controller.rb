@@ -1,29 +1,32 @@
 class SongsController < ApplicationController
   before_action :set_song, only: [:show, :update, :destroy]
 
-  # GET /posts
-  # GET /posts.json
-  def index
+  # GET server/findsongorcreate
+  def find_first_or_create
     if params[:title].present? && params[:artist].present? && params[:duration].present?
       # check if we already have this song,
       # name, artist must exactly match and
       # the duration should be in one second range
       # of the one we have in database
-      matchedSong = Song.where("title = ? AND artist = ? AND ( duration BETWEEN ? AND ? )",
+      matchedSongs = Song.where("title = ? AND artist = ? AND ( duration BETWEEN ? AND ? )",
       params[:title], params[:artist], params[:duration].to_f - 1, params[:duration].to_f + 1)
 
-      if matchedSong.exists?
-        @song = matchedSong
+      if matchedSongs.exists?
+        @song = matchedSongs.first
       else
         @song = Song.create(title: params[:title], artist: params[:artist], duration: params[:duration].to_f)
       end
       render json: @song
     else
-      # for testing only
-      render json: Song.all
+      render json: { error: "Parameters are not valid" }, status: 422
     end
   end
 
+  # GET /posts
+  # GET /posts.json
+  def index
+    render json: Song.all
+  end
   # GET /posts/1
   # GET /posts/1.json
   def show
