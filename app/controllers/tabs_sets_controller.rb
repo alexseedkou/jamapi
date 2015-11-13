@@ -43,7 +43,6 @@ class TabsSetsController < ApplicationController
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      #
       render json: @song.tabs_sets
     end
   end
