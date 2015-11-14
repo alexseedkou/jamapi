@@ -1,5 +1,5 @@
 class TabsSetsController < ApplicationController
-  before_action :set_tabs_set, only: [:show, :update, :increment_votes, :decrement_votes, :destroy]
+  before_action :set_tabs_set, only: [:show, :update, :destroy]
   before_action :find_first_or_create, only: [:get_tabs_sets, :create]
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
@@ -44,17 +44,18 @@ class TabsSetsController < ApplicationController
   end
 
 
-  def increment_votes
-    @tabs_set.upvotes = @tabs_set.upvotes + 1
-    save_and_render
-  end
-
-  def decrement_votes
-    @tabs_set.upvotes = @tabs_set.upvotes - 1
-    save_and_render
-  end
-
   def update
+    #update votes
+    if params[:increment_votes].present?
+      if params[:increment_votes].to_i == 1
+        @tabs_set.upvotes = @tabs_set.upvotes + 1
+      else
+        @tabs_set.downvotes = @tabs_set.downvotes + 1
+      end
+      save_and_render
+    else
+      render json: { error: "Invalid paramters, nothing updated" }, status: 401
+    end
     #wait till user auth_token
   end
 
@@ -63,7 +64,7 @@ class TabsSetsController < ApplicationController
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @song.tabs_sets
+      render json: @song.tabs_sets.sortedByVotes
     end
   end
 

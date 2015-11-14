@@ -7,9 +7,6 @@ Rails.application.routes.draw do
 
   get 'get_tabs_sets', to: 'tabs_sets#get_tabs_sets'
 
-  get 'increment_votes', to: 'tabs_sets#increment_votes'
-  get 'decrement_votes', to: 'tabs_sets#decrement_votes'
-  
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
