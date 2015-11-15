@@ -47,6 +47,7 @@ class TabsSetsController < ApplicationController
   def update
     #update votes
     if params[:increment_votes].present?
+      # parameter is 1 if up votes, and 0 if down votes
       if params[:increment_votes].to_i == 1
         @tabs_set.upvotes = @tabs_set.upvotes + 1
       else

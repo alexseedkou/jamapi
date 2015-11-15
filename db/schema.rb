@@ -11,20 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151109163941) do
+ActiveRecord::Schema.define(version: 20151115035903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "lyrics_sets", force: :cascade do |t|
-    t.string   "times",                   array: true
-    t.string   "lyrics",                  array: true
-    t.integer  "upvotes"
-    t.integer  "downvotes"
+    t.string   "times",                               array: true
+    t.string   "lyrics",                              array: true
+    t.integer  "upvotes",    default: 0
+    t.integer  "downvotes",  default: 0
     t.integer  "song_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "lyrics_sets", ["song_id"], name: "index_lyrics_sets_on_song_id", using: :btree
