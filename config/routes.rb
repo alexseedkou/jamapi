@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :lyrics_sets, except: [:new, :edit]
 
   get 'get_tabs_sets', to: 'tabs_sets#get_tabs_sets'
+  get 'get_lyrics_sets', to: 'lyrics_sets#get_lyrics_sets'
 
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.

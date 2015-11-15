@@ -22,6 +22,7 @@ class LyricsSetsController < ApplicationController
     render json: @lyrics_set, serializer: LyricsSetContentSerializer
   end
 
+ # POST /lyrics_sets
   def create
     puts "====Creating lyrics"
     if @song.nil?
@@ -34,6 +35,15 @@ class LyricsSetsController < ApplicationController
       else
         render json: @lyrics_set.errors, status: :unprocessable_entity
       end
+    end
+  end
+
+  # GET server/get_lyrics_sets
+  def get_lyrics_sets
+    if @song.nil?
+      render json: { error: "Invalid parameters" }, status: 422
+    else
+      render json: @song.lyrics_sets.sortedByVotes
     end
   end
 
