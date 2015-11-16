@@ -2,7 +2,7 @@ class LyricsSet < ActiveRecord::Base
   belongs_to :song
   belongs_to :user
 
-  def numberOfLines
+  def number_of_lines
     unless lyrics.nil?
       return  lyrics.size
     end
