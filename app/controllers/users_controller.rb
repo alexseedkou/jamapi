@@ -18,6 +18,12 @@ class UsersController < ApplicationController
   # POST /users
 
   def create
+    # attemp login in POST method to avoid exposing password in logs
+    if params[:attempt_login].present?
+      attempt_login
+      return
+    end
+
     if params[:email].present? && params[:username].present? && params[:password].present?
       newUser = User.new(:email => params[:email], :username => params[:username], :password => params[:password])
       if newUser.save
@@ -25,6 +31,8 @@ class UsersController < ApplicationController
       else
         render json: { error: newUser.errors.full_messages }
       end
+    else
+      render json: { error: "Invalid parameters" }, status: 422
     end
   end
 
