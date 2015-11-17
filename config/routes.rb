@@ -7,6 +7,9 @@ Rails.application.routes.draw do
 
   get 'get_tabs_sets', to: 'tabs_sets#get_tabs_sets'
   get 'get_lyrics_sets', to: 'lyrics_sets#get_lyrics_sets'
+  get 'attempt_login', to: 'users#attempt_login'
+  get 'validate_email', to: 'users#validate_email'
+  get 'validate_username', to: 'users#validate_username'
 
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
