@@ -24,8 +24,8 @@ class UsersController < ApplicationController
       return
     end
 
-    if params[:email].present? && params[:username].present? && params[:password].present?
-      newUser = User.new(:email => params[:email], :username => params[:username], :password => params[:password])
+    if params[:email].present? && params[:password].present?
+      newUser = User.new(:email => params[:email], :password => params[:password])
       if newUser.save
         render json: { token: newUser.auth_token }
       else
@@ -43,25 +43,16 @@ class UsersController < ApplicationController
   end
 
   def attempt_login
-    #user can log in with either email or username
-    if params[:email].present? && params[:password].present?
-      found_user = User.where(:email => params[:email]).first
-      if found_user
-        authorized_user = found_user.authenticate(params[:password])
-      end
-    elsif params[:username].present? && params[:password].present?
-      found_user = User.where(:username => params[:username]).first
-      if found_user
-        authorized_user = found_user.authenticate(params[:password])
-      end
+    found_user = User.where(:email => params[:email]).first
+    if found_user
+      authorized_user = found_user.authenticate(params[:password])
     end
+
     if authorized_user
       #this token is stored in iOS app, and is used to retrieve user profile
       render json: { token: authorized_user.auth_token }
-      puts "we are logged in and session username #{session[:username]}"
     else
       render json: { error: "Invalid username/password" }, status: 401
-      puts "invalid username"
     end
   end
 
@@ -76,21 +67,6 @@ class UsersController < ApplicationController
         render json: { valid: "email is valid"}
       else
         render json: { erorr: u.errors.full_messages }
-      end
-    end
-  end
-
- # GET /validate_username?username=example
-  def validate_username
-    if params[:username].present?
-      u = User.new
-      u.username = params[:username]
-      u.email = "forvalidation@email.com"
-      u.password = "forvalidation"
-      if u.validate
-        render json: { valid: "username is valid"}
-      else
-        render json: { error: u.errors.full_messages }
       end
     end
   end
