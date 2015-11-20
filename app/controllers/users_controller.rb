@@ -66,7 +66,7 @@ class UsersController < ApplicationController
       if u.validate
         render json: { valid: "email is valid"}
       else
-        render json: { erorr: u.errors.full_messages }
+        render json: { error: u.errors.full_messages }
       end
     end
   end
