@@ -27,7 +27,7 @@ class UsersController < ApplicationController
     if params[:email].present? && params[:password].present?
       newUser = User.new(:email => params[:email], :password => params[:password])
       if newUser.save
-        render json: { token: newUser.auth_token }
+        render json: { user: newUser }
       else
         render json: { error: newUser.errors.full_messages }
       end
@@ -50,7 +50,7 @@ class UsersController < ApplicationController
 
     if authorized_user
       #this token is stored in iOS app, and is used to retrieve user profile
-      render json: { token: authorized_user.auth_token }
+      render json: { user: authorized_user }
     else
       render json: { error: "Invalid username/password" }, status: 401
     end
