@@ -11,22 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151122200155) do
+ActiveRecord::Schema.define(version: 20151122203302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "lyrics_sets", force: :cascade do |t|
-    t.string   "times",                               array: true
-    t.string   "lyrics",                              array: true
-    t.integer  "upvotes",    default: 0
-    t.integer  "downvotes",  default: 0
+    t.string   "times",                                              array: true
+    t.string   "lyrics",                                             array: true
     t.integer  "song_id"
     t.integer  "user_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "cached_votes_total",      default: 0
+    t.integer  "cached_votes_score",      default: 0
+    t.integer  "cached_votes_up",         default: 0
+    t.integer  "cached_votes_down",       default: 0
+    t.integer  "cached_weighted_score",   default: 0
+    t.integer  "cached_weighted_total",   default: 0
+    t.float    "cached_weighted_average", default: 0.0
   end
 
+  add_index "lyrics_sets", ["cached_votes_down"], name: "index_lyrics_sets_on_cached_votes_down", using: :btree
+  add_index "lyrics_sets", ["cached_votes_score"], name: "index_lyrics_sets_on_cached_votes_score", using: :btree
+  add_index "lyrics_sets", ["cached_votes_total"], name: "index_lyrics_sets_on_cached_votes_total", using: :btree
+  add_index "lyrics_sets", ["cached_votes_up"], name: "index_lyrics_sets_on_cached_votes_up", using: :btree
+  add_index "lyrics_sets", ["cached_weighted_average"], name: "index_lyrics_sets_on_cached_weighted_average", using: :btree
+  add_index "lyrics_sets", ["cached_weighted_score"], name: "index_lyrics_sets_on_cached_weighted_score", using: :btree
+  add_index "lyrics_sets", ["cached_weighted_total"], name: "index_lyrics_sets_on_cached_weighted_total", using: :btree
   add_index "lyrics_sets", ["song_id"], name: "index_lyrics_sets_on_song_id", using: :btree
   add_index "lyrics_sets", ["user_id"], name: "index_lyrics_sets_on_user_id", using: :btree
 

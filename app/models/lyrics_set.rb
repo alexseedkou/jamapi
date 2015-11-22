@@ -2,6 +2,9 @@ class LyricsSet < ActiveRecord::Base
   belongs_to :song
   belongs_to :user
 
+  acts_as_votable
+  scope :sortedByVotes, lambda { order("cached_votes_score DESC") }
+
   def number_of_lines
     unless lyrics.nil?
       return  lyrics.size
@@ -23,9 +26,4 @@ class LyricsSet < ActiveRecord::Base
     return preview
   end
 
-  def average_votes
-    return upvotes - downvotes
-  end
-
-  scope :sortedByVotes, lambda { order("lyrics_sets.upvotes - lyrics_sets.downvotes DESC") }
 end

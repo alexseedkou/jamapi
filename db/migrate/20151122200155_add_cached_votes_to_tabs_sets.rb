@@ -1,8 +1,8 @@
 class AddCachedVotesToTabsSets < ActiveRecord::Migration
   def self.up
     #remove old columns
-    remove_column :tabs_sets, :upvotes
-    remove_column :tabs_sets, :downvotes
+    remove_column :tabs_sets, :upvotes if TabsSet.column_names.include?('upvotes')
+    remove_column :tabs_sets, :downvotes if TabsSet.column_names.include?('downvotes')
 
    add_column :tabs_sets, :cached_votes_total, :integer, :default => 0
    add_column :tabs_sets, :cached_votes_score, :integer, :default => 0
@@ -24,9 +24,6 @@ class AddCachedVotesToTabsSets < ActiveRecord::Migration
  end
 
  def self.down
-   add_column :tabs_sets, :upvotes
-   add_column :tabs_sets, :downvotes
-   
    remove_column :tabs_sets, :cached_votes_total
    remove_column :tabs_sets, :cached_votes_score
    remove_column :tabs_sets, :cached_votes_up

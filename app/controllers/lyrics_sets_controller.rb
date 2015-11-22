@@ -47,6 +47,20 @@ class LyricsSetsController < ApplicationController
     end
   end
 
+  #PUT /lyrics_sets/:id/like  body: { "user_id": id}
+  def upvote
+    set = LyricsSet.find(params[:id])
+    set.upvote_by User.find(params[:user_id])
+    render json: set
+  end
+
+  #PUT /lyrics_sets/:id/dislike  body: { "user_id": id}
+  def downvote
+    set = LyricsSet.find(params[:id])
+    set.downvote_by User.find(params[:user_id])
+    render json: set
+  end
+
   private
   def set_lyrics_set
     @lyrics_set = LyricsSet.find(params[:id])
