@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 #gem "searchkick"
 #gem 'elasticsearch-rails'
 #gem 'bonsai-elasticsearch-rails' #for heroku's bonsai to work with 9200 host
+
+gem 'acts_as_votable', '~> 0.10.0'
+
 gem 'active_model_serializers', '~> 0.8.3'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'

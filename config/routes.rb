@@ -10,6 +10,13 @@ Rails.application.routes.draw do
   get 'attempt_login', to: 'users#attempt_login'
   get 'validate_email', to: 'users#validate_email'
 
+  resources :tabs_sets do
+  member do
+    put "like", to: "tabs_sets#upvote"
+    put "dislike", to: "tabs_sets#downvote"
+    end
+  end
+
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

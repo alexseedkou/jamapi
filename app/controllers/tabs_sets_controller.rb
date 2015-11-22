@@ -46,18 +46,7 @@ class TabsSetsController < ApplicationController
 
   def update
     #update votes
-    if params[:increment_votes].present?
-      # parameter is 1 if up votes, and 0 if down votes
-      if params[:increment_votes].to_i == 1
-        @tabs_set.upvotes = @tabs_set.upvotes + 1
-      else
-        @tabs_set.downvotes = @tabs_set.downvotes + 1
-      end
-      save_and_render
-    else
-      render json: { error: "Invalid paramters, nothing updated" }, status: 401
-    end
-    #wait till user auth_token
+
   end
 
   # GET server/get_tabs_sets
@@ -67,6 +56,20 @@ class TabsSetsController < ApplicationController
     else
       render json: @song.tabs_sets.sortedByVotes
     end
+  end
+
+  #PUT /tabs_sets/:id/like  body: { "user_id": id}
+  def upvote
+    set = TabsSet.find(params[:id])
+    set.upvote_by User.find(params[:user_id])
+    render json: set
+  end
+
+  #PUT /tabs_sets/:id/dislike  body: { "user_id": id}
+  def downvote
+    set = TabsSet.find(params[:id])
+    set.downvote_by User.find(params[:user_id])
+    render json: set
   end
 
   private
@@ -82,7 +85,4 @@ class TabsSetsController < ApplicationController
     end
   end
 
-  # def tabs_sets_params
-  #   params.require(:tabs_set).permit(:tuning, :capo, :song_id, :times => [], :chords => [], :tabs=> [])
-  # end
 end
