@@ -11,7 +11,7 @@ class LyricsSetsController < ApplicationController
       #should is for testing only
       @lyrics_sets = LyricsSet.all.sortedByVotes
     end
-    
+
     if params[:user_id].present?
       render json: @lyrics_sets, :user => User.find(params[:user_id])
     else
@@ -47,7 +47,11 @@ class LyricsSetsController < ApplicationController
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @song.lyrics_sets.sortedByVotes
+      if params[:user_id].present?
+        render json: @song.lyrics_sets.sortedByVotes, :user => User.find(params[:user_id])
+      else
+        render json: @song.lyrics_sets.sortedByVotes
+      end
     end
   end
 
