@@ -14,7 +14,11 @@ class TabsSetsController < ApplicationController
       @tabs_sets = TabsSet.all.sortedByVotes
     end
     #we never show the entire database of tabs, this is just for testing
-    render json: @tabs_sets
+    if params[:user_id].present?
+      render json: @tabs_sets, :user => User.find(params[:user_id])
+    else
+      render json: @tabs_sets
+    end
   end
 
   # GET /posts/1

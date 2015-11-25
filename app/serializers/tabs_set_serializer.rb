@@ -1,3 +1,17 @@
 class TabsSetSerializer < ActiveModel::Serializer
-  attributes :id, :tuning, :capo, :cached_votes_score, :song_id, :user_id, :chords_preview
+  attributes :id, :tuning, :capo, :cached_votes_score, :song_id, :user_id, :chords_preview, :vote_status
+
+  def vote_status
+    if options[:user] == nil
+      return "no user applicable"
+    else
+      if options[:user].voted_up_on? object
+        return "up"
+      elsif options[:user].voted_down_on? object
+        return "down"
+      else
+        return "yet"
+      end
+    end
+  end
 end
