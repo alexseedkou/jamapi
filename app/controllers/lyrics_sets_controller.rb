@@ -58,14 +58,24 @@ class LyricsSetsController < ApplicationController
   #PUT /lyrics_sets/:id/like  body: { "user_id": id}
   def upvote
     set = LyricsSet.find(params[:id])
-    set.upvote_by User.find(params[:user_id])
+    current_user = User.find(params[:user_id])
+    if current_user.voted_up_on? set #if this user already voted, remove the vote
+      set.unliked_by current_user
+    else
+      set.upvote_by current_user
+    end
     render json: set
   end
 
   #PUT /lyrics_sets/:id/dislike  body: { "user_id": id}
   def downvote
     set = LyricsSet.find(params[:id])
-    set.downvote_by User.find(params[:user_id])
+    current_user = User.find(params[:user_id])
+    if current_user.voted_down_on? set #if this user already voted, remove the vote
+      set.undisliked_by current_user
+    else
+      set.downvote_by current_user
+    end
     render json: set
   end
 
