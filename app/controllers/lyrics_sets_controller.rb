@@ -11,8 +11,12 @@ class LyricsSetsController < ApplicationController
       #should is for testing only
       @lyrics_sets = LyricsSet.all.sortedByVotes
     end
-    #we never show the entire database of lyrics, this is just for testing
-    render json: @lyrics_sets
+    
+    if params[:user_id].present?
+      render json: @lyrics_sets, :user => User.find(params[:user_id])
+    else
+      render json: @lyrics_sets
+    end
   end
 
   # GET /posts/1
