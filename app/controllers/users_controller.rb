@@ -46,13 +46,22 @@ class UsersController < ApplicationController
     found_user = User.where(:email => params[:email]).first
     if found_user
       authorized_user = found_user.authenticate(params[:password])
-    end
-
-    if authorized_user
-      #this token is stored in iOS app, and is used to retrieve user profile
-      render json: authorized_user, serializer: UserInitializationSerializer
+      if authorized_user
+        #this token is stored in iOS app, and is used to retrieve user profile
+        render json: authorized_user, serializer: UserInitializationSerializer
+      else
+        render json: { error: "Invalid username/password" }, status: 401
+      end
+    elsif params[:attempt_login] == "facebook"
+      #if this is an facebook login request and no yet user is found, we create a new one
+      newUser = User.new(:email => params[:email], :password => params[:password])
+      if newUser.save
+        render json: newUser , serializer: UserInitializationSerializer
+      else
+        render json: { error: newUser.errors.full_messages }
+      end
     else
-      render json: { error: "Invalid username/password" }, status: 401
+      render json: { error: "No users found" }, status: 401
     end
   end
 
