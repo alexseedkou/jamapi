@@ -75,7 +75,7 @@ class TabsSetsController < ApplicationController
     else
       set.upvote_by current_user
     end
-    render json: set
+    render json: set, :user => current_user
   end
 
   #PUT /tabs_sets/:id/dislike  body: { "user_id": id}
@@ -87,7 +87,7 @@ class TabsSetsController < ApplicationController
     else
       set.downvote_by current_user
     end
-    render json: set
+    render json: set, :user => current_user
   end
 
   private
