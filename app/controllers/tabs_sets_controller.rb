@@ -4,8 +4,7 @@ class TabsSetsController < ApplicationController
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
-  # GET /posts
-  # GET /posts.json
+  # GET /tabs_sets
   def index
     if params[:song_id].present?
       @tabs_sets = TabsSet.where(:song_id => params[:song_id]).sortedByVotes
@@ -21,37 +20,39 @@ class TabsSetsController < ApplicationController
     end
   end
 
-  # GET /posts/1
-  # GET /posts/1.json
+  # GET /tabs_sets/1
   def show
     #show times, chords, and tabs of the particular tabsSet
     render json: @tabs_set, serializer: TabsSetContentSerializer
   end
 
-  # POST /posts
-  # POST /posts.json
+  # POST /tabs_sets
 
   # find_first_or_create is called to find song_id before create
   def create
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      @tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
-       :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
-        :song_id => @song.id, :user_id => params[:user_id])
-      if @tabs_set.save
-        render json: @tabs_set, status: :created, location: @tabs_set
+      # we only allow one tabsSet per song for one user
+      # so if we found one already, we just update it
+      found_tabs_set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
+      if found_tabs_set.present?
+        found_tabs_set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
+         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs])
+         render json: found_tabs_set
       else
-        render json: @tabs_set.errors, status: :unprocessable_entity
+        tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
+         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
+          :song_id => @song.id, :user_id => params[:user_id])
+        if tabs_set.save
+          render json: tabs_set, status: :created, location: tabs_set
+        else
+          render json: tabs_set.errors, status: :unprocessable_entity
+        end
       end
     end
   end
 
-
-  def update
-    #update votes
-
-  end
 
   # GET server/get_tabs_sets
   def get_tabs_sets
