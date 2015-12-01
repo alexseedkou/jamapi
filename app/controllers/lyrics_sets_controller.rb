@@ -28,16 +28,21 @@ class LyricsSetsController < ApplicationController
 
  # POST /lyrics_sets
   def create
-    puts "====Creating lyrics"
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      @lyrics_set = LyricsSet.new(:times => params[:times], :lyrics => params[:lyrics],
-        :song_id => @song.id, :user_id => params[:user_id])
-      if @lyrics_set.save
-        render json: @lyrics_set, status: :created, location: @lyrics_set
+      found_lyrics_set = LyricsSet.where(song_id: @song.id, user_id: params[:user_id]).first
+      if found_lyrics_set.present?
+        found_lyrics_set.update_attributes(:times => params[:times], :lyrics => params[:lyrics])
+        render json: found_lyrics_set
       else
-        render json: @lyrics_set.errors, status: :unprocessable_entity
+        @lyrics_set = LyricsSet.new(:times => params[:times], :lyrics => params[:lyrics],
+          :song_id => @song.id, :user_id => params[:user_id])
+        if @lyrics_set.save
+          render json: @lyrics_set, status: :created, location: @lyrics_set
+        else
+          render json: @lyrics_set.errors, status: :unprocessable_entity
+        end
       end
     end
   end
