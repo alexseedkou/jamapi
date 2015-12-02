@@ -1,5 +1,8 @@
 class TabsSetSerializer < ActiveModel::Serializer
-  attributes :id, :tuning, :capo, :cached_votes_score, :song_id, :user_id, :chords_preview, :vote_status
+  attributes :id, :tuning, :capo, :cached_votes_score, :song_id,
+  :chords_preview, :vote_status, :updated_at
+
+  has_one :user, serializer: UserListSerializer
 
   def vote_status
     if options[:user] == nil
