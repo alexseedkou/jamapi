@@ -36,7 +36,20 @@ class UsersController < ApplicationController
     end
   end
 
+  #update nickname, avatar urls
   def update
+    #user is already logged in here
+    #TODO: authenticate with token?
+    if params[:nickname].present?
+      @user.update_attribute(:nickname, params[:nickname])
+    end
+
+    if params[:avatar_url_medium].present? && params[:avatar_url_thumbnail].present?
+      @user.update_attribute(:avatar_url_medium, params[:avatar_url_medium])
+      @user.update_attribute(:avatar_url_thumbnail, params[:avatar_url_thumbnail])
+    end
+
+    render json: @user
   end
 
   def destroy
@@ -50,7 +63,7 @@ class UsersController < ApplicationController
         #this token is stored in iOS app, and is used to retrieve user profile
         render json: authorized_user, serializer: UserInitializationSerializer
       else
-        render json: { error: "Invalid username/password" }, status: 401
+        render json: { error: "Invalid email/password" }, status: 401
       end
     elsif params[:attempt_login] == "facebook"
       #if this is an facebook login request and no yet user is found, we create a new one
