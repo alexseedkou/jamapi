@@ -48,7 +48,6 @@ class UsersController < ApplicationController
       @user.update_attribute(:avatar_url_medium, params[:avatar_url_medium])
       @user.update_attribute(:avatar_url_thumbnail, params[:avatar_url_thumbnail])
     end
-
     render json: @user
   end
 
@@ -67,7 +66,9 @@ class UsersController < ApplicationController
       end
     elsif params[:attempt_login] == "facebook"
       #if this is an facebook login request and no yet user is found, we create a new one
-      newUser = User.new(:email => params[:email], :password => params[:password])
+      newUser = User.new(email: params[:email], password: params[:password], nickname: params[:nickname],
+      avatar_url_thumbnail: params[:avatar_url_thumbnail],
+      avatar_url_medium: params[:avatar_url_medium])
       if newUser.save
         render json: newUser , serializer: UserInitializationSerializer
       else
