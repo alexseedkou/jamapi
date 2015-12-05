@@ -24,8 +24,8 @@ class UsersController < ApplicationController
       return
     end
 
-    if params[:email].present? && params[:password].present?
-      newUser = User.new(:email => params[:email], :password => params[:password])
+    if params[:email].present? && params[:password].present? && params[:nickname].present?
+      newUser = User.new(nickname: params[:nickname], email: params[:email], password: params[:password])
       if newUser.save
         render json: newUser , serializer: UserInitializationSerializer
       else
