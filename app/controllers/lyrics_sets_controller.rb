@@ -1,6 +1,6 @@
 class LyricsSetsController < ApplicationController
   before_action :set_lyrics_set, only: [:show, :update, :destroy]
-  before_action :find_first_or_create, only: [:get_lyrics_sets, :create]
+  before_action :find_first_or_create, only: [:get_lyrics_sets, :create, :get_most_liked_lyrics_set]
 
   # GET /posts
   # GET /posts.json
