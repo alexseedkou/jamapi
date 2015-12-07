@@ -1,6 +1,6 @@
 class TabsSetsController < ApplicationController
   before_action :set_tabs_set, only: [:show, :update, :destroy]
-  before_action :find_first_or_create, only: [:get_tabs_sets, :create]
+  before_action :find_first_or_create, only: [:get_tabs_sets, :create , :get_most_liked_tabs_set]
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
@@ -53,6 +53,15 @@ class TabsSetsController < ApplicationController
     end
   end
 
+
+  # GET server/get_most_liked_tabs_set
+  def get_most_liked_tabs_set
+    if @song.nil?
+        render json: { error: "Invalid parameters" }, status: 422
+    else
+      render json: @song.tabs_sets.sortedByVotes.first
+    end
+  end
 
   # GET server/get_tabs_sets
   def get_tabs_sets

@@ -47,6 +47,16 @@ class LyricsSetsController < ApplicationController
     end
   end
 
+  # GET server/get_most_liked_lyrics_set
+  def get_most_liked_lyrics_set
+    if @song.nil?
+        render json: { error: "Invalid parameters" }, status: 422
+    else
+      render json: @song.lyrics_sets.sortedByVotes.first
+    end
+  end
+
+
   # GET server/get_lyrics_sets
   def get_lyrics_sets
     if @song.nil?
