@@ -84,7 +84,7 @@ class UsersController < ApplicationController
     if params[:email].present?
       u = User.new
       u.email = params[:email]
-      u.username = "forvalidation"
+      u.nickname = "forvalidation"
       u.password = "forvalidation"
       if u.validate
         render json: { valid: "email is valid"}
