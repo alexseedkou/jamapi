@@ -59,7 +59,12 @@ class TabsSetsController < ApplicationController
     if @song.nil?
         render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @song.tabs_sets.sortedByVotes.first, serializer: TabsSetContentSerializer
+      most_liked_set = @song.tabs_sets.sortedByVotes.first
+      if most_liked_set.present?
+          render json: @song.tabs_sets.sortedByVotes.first, serializer: TabsSetContentSerializer
+      else
+          render json: { error: "not-found"}, status: 404
+      end
     end
   end
 
