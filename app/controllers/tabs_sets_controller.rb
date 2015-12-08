@@ -59,7 +59,7 @@ class TabsSetsController < ApplicationController
     if @song.nil?
         render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @song.tabs_sets.sortedByVotes.first
+      render json: @song.tabs_sets.sortedByVotes.first, serializer: TabsSetContentSerializer
     end
   end
 

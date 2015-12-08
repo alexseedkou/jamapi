@@ -52,7 +52,7 @@ class LyricsSetsController < ApplicationController
     if @song.nil?
         render json: { error: "Invalid parameters" }, status: 422
     else
-      render json: @song.lyrics_sets.sortedByVotes.first
+      render json: @song.lyrics_sets.sortedByVotes.first, serializer: LyricsSetContentSerializer
     end
   end
 
