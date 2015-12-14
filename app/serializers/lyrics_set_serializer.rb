@@ -1,8 +1,8 @@
 class LyricsSetSerializer < ActiveModel::Serializer
   attributes :id, :cached_votes_score, :number_of_lines,
-   :lyrics_preview, :vote_status, :updated_at
+   :lyrics_preview, :vote_status, :updated_at, :song_id
 
-  has_one :song, serializer: SongInformationSerializer
+  #has_one :song, serializer: SongInformationSerializer
   has_one :user, serializer: UserListSerializer
 
   def vote_status
