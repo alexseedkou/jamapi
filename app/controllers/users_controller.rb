@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :favorite_a_song, :favorite_songs, :destroy]
 
   # GET /users
   # GET /users.json
@@ -92,6 +92,24 @@ class UsersController < ApplicationController
         render json: { error: u.errors.full_messages }
       end
     end
+  end
+
+  #PUT user/:id/favorite_a_song body: {"title":"", "artist": "", "duration": ""}
+  def favorite_a_song
+    find_first_or_create
+    #if already voted, dislikes it
+    if @user.voted_up_on? @song
+      @user.dislikes @song
+      render json: { result: "disliked"}
+    else
+      @user.likes @song
+      render json: { result: "liked"}
+    end
+  end
+  #GET user/:id/favorite_songs
+  def favorite_songs
+    songs = @user.get_up_voted Song
+    render json: songs, each_serializer: SongInformationSerializer
   end
 
   private

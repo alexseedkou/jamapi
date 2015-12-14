@@ -27,6 +27,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do
+  member do
+    get "favorite_songs", to: "users#favorite_songs"
+    put "favorite_a_song", to: "users#favorite_a_song"
+    end
+  end
+
   #match ':controller(/:action(/:id))', :via => [:get, :post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
