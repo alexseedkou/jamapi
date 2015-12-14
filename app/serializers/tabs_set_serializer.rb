@@ -1,5 +1,5 @@
 class TabsSetSerializer < ActiveModel::Serializer
-  attributes :id, :tuning, :capo, :cached_votes_score, :chords_preview, :vote_status, :updated_at
+  attributes :id, :tuning, :capo, :cached_votes_score, :chords_preview, :vote_status, :updated_at, :song_id
 
   has_one :song, serializer: SongInformationSerializer
   has_one :user, serializer: UserListSerializer
