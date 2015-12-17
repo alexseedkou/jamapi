@@ -21,6 +21,17 @@ class SongsController < ApplicationController
     end
   end
 
+  # when a user clicks a song,
+  # if no id stored, make an API to request an ID
+  # return a song_id(whether newly created or existed)
+  # store in device's database
+  # must return and id
+  # GET /get_song_id    body: {"title":"", "artist": "", "duration": 0.0 }
+  def get_song_id
+    find_first_or_create
+    render json:  { song_id: @song.id }
+  end
+
   private
 
   def set_song

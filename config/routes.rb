@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'attempt_login', to: 'users#attempt_login'
   get 'validate_email', to: 'users#validate_email'
 
+  get 'get_song_id', to: 'songs#get_song_id'
+
   resources :tabs_sets do
   member do
     put "like", to: "tabs_sets#upvote"
