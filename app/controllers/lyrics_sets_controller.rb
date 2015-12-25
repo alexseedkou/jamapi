@@ -47,6 +47,16 @@ class LyricsSetsController < ApplicationController
     end
   end
 
+  # DELETE lyrics_sets/:id
+  def destroy
+    @lyrics_set.destroy
+    if @lyrics_set.destroyed?
+      render json: { result: "successfully destroyed"}
+    else
+      render json: { result: "cannot destroy"}
+    end
+  end
+
   # GET server/get_most_liked_lyrics_set
   def get_most_liked_lyrics_set
     if @song.nil?

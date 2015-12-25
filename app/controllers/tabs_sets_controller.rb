@@ -53,6 +53,15 @@ class TabsSetsController < ApplicationController
     end
   end
 
+  # DELETE tabs_sets/:id
+  def destroy
+    @tabs_set.destroy
+    if @tabs_set.destroyed?
+      render json: { result: "successfully destroyed"}
+    else
+      render json: { result: "cannot destroy"}
+    end
+  end
 
   # GET server/get_most_liked_tabs_set
   def get_most_liked_tabs_set
