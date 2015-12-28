@@ -38,12 +38,12 @@ class TabsSetsController < ApplicationController
       found_tabs_set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
       if found_tabs_set.present?
         found_tabs_set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
-         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs])
+         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now)
          render json: found_tabs_set
       else
         tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
-          :song_id => @song.id, :user_id => params[:user_id])
+          :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now)
         if tabs_set.save
           render json: tabs_set, status: :created, location: tabs_set
         else
