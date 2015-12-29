@@ -4,10 +4,10 @@ class TabsSetsController < ApplicationController
   # we don't need user to index and show, but we need user to create,
   # and the matched user to update and delete
 
-  # GET /tabs_sets
+  # GET /tabs_sets body: { "song_id": 1 }
   def index
     if params[:song_id].present?
-      @tabs_sets = TabsSet.where(:song_id => params[:song_id]).sortedByVotes
+      @tabs_sets = TabsSet.where(:song_id => params[:song_id]).visible.sortedByVotes
     else
       #should is for testing only
       @tabs_sets = TabsSet.all.sortedByVotes
@@ -20,7 +20,7 @@ class TabsSetsController < ApplicationController
     end
   end
 
-  # GET /tabs_sets/1
+  # GET /tabs_sets/:id
   def show
     #show times, chords, and tabs of the particular tabsSet
     render json: @tabs_set, serializer: TabsSetContentSerializer
@@ -38,12 +38,12 @@ class TabsSetsController < ApplicationController
       found_tabs_set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
       if found_tabs_set.present?
         found_tabs_set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
-         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now)
+         :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now, :visible => params[:visible])
          render json: found_tabs_set
       else
         tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
-          :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now)
+          :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now, :visible => params[:visible])
         if tabs_set.save
           render json: tabs_set, status: :created, location: tabs_set
         else
@@ -68,9 +68,9 @@ class TabsSetsController < ApplicationController
     if @song.nil?
         render json: { error: "Invalid parameters" }, status: 422
     else
-      most_liked_set = @song.tabs_sets.sortedByVotes.first
+      most_liked_set = @song.tabs_sets.visible.sortedByVotes.first
       if most_liked_set.present?
-          render json: @song.tabs_sets.sortedByVotes.first, serializer: TabsSetContentSerializer
+          render json: @song.tabs_sets.visible.sortedByVotes.first, serializer: TabsSetContentSerializer
       else
           render json: { error: "not-found"}, status: 404
       end
@@ -82,12 +82,24 @@ class TabsSetsController < ApplicationController
     if @song.nil?
       render json: { error: "Invalid parameters" }, status: 422
     else
-      if params[:user_id].present?
-        render json: @song.tabs_sets.sortedByVotes, :user => User.find(params[:user_id])
+      if params[:user_id].present? #return vote status along with all tabsSets
+        render json: @song.tabs_sets.visible.sortedByVotes, :user => User.find(params[:user_id])
       else
-        render json: @song.tabs_sets.sortedByVotes
+        render json: @song.tabs_sets.visible.sortedByVotes
       end
     end
+  end
+
+ #PUT /tabs_sets/:id/change_visibility
+  def change_visibility
+    set = TabsSet.find(params[:id])
+    if set.visible
+      set.visible = false
+    else
+      set.visible = true
+    end
+    set.save
+    render json: set
   end
 
   #PUT /tabs_sets/:id/like  body: { "user_id": id}

@@ -6,6 +6,7 @@ class TabsSet < ActiveRecord::Base
   acts_as_votable
 
   scope :sortedByVotes, lambda { order("cached_votes_score DESC") }
+  scope :visible, -> { where(visible: true) }
 
   def chords_preview
     #get first 8 chords of the song and concatenate to a string
