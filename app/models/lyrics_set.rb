@@ -4,7 +4,8 @@ class LyricsSet < ActiveRecord::Base
 
   acts_as_votable
   scope :sortedByVotes, lambda { order("cached_votes_score DESC") }
-
+  scope :visible, -> { where(visible: true) }
+  
   def number_of_lines
     unless lyrics.nil?
       return  lyrics.size

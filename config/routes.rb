@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   member do
     put "like", to: "lyrics_sets#upvote"
     put "dislike", to: "lyrics_sets#downvote"
+    put "change_visibility", to: "lyrics_sets#change_visibility"
     end
   end
 

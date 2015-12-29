@@ -6,7 +6,7 @@ class LyricsSetsController < ApplicationController
   # GET /posts.json
   def index
     if params[:song_id].present?
-      @lyrics_sets = LyricsSet.where(:song_id => params[:song_id]).sortedByVotes
+      @lyrics_sets = LyricsSet.where(:song_id => params[:song_id]).visible.sortedByVotes
     else
       #should is for testing only
       @lyrics_sets = LyricsSet.all.sortedByVotes
@@ -33,11 +33,12 @@ class LyricsSetsController < ApplicationController
     else
       found_lyrics_set = LyricsSet.where(song_id: @song.id, user_id: params[:user_id]).first
       if found_lyrics_set.present?
-        found_lyrics_set.update_attributes(:times => params[:times], :lyrics => params[:lyrics], :last_edited => Time.now)
+        found_lyrics_set.update_attributes(:times => params[:times], :lyrics => params[:lyrics],
+        :last_edited => Time.now, :visible => params[:visible])
         render json: found_lyrics_set
       else
         @lyrics_set = LyricsSet.new(:times => params[:times], :lyrics => params[:lyrics],
-          :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now)
+          :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now, :visible => params[:visible])
         if @lyrics_set.save
           render json: @lyrics_set, status: :created, location: @lyrics_set
         else
@@ -62,9 +63,9 @@ class LyricsSetsController < ApplicationController
     if @song.nil?
         render json: { error: "Invalid parameters" }, status: 422
     else
-      most_liked_set = @song.lyrics_sets.sortedByVotes.first
+      most_liked_set = @song.lyrics_sets.visible.sortedByVotes.first
       if most_liked_set.present?
-        render json: @song.lyrics_sets.sortedByVotes.first, serializer: LyricsSetContentSerializer
+        render json: @song.lyrics_sets.visible.sortedByVotes.first, serializer: LyricsSetContentSerializer
       else
         render json: { error: "not-found"}, status: 404
       end
@@ -78,12 +79,24 @@ class LyricsSetsController < ApplicationController
       render json: { error: "Invalid parameters" }, status: 422
     else
       if params[:user_id].present?
-        render json: @song.lyrics_sets.sortedByVotes, :user => User.find(params[:user_id])
+        render json: @song.lyrics_sets.visible.sortedByVotes, :user => User.find(params[:user_id])
       else
-        render json: @song.lyrics_sets.sortedByVotes
+        render json: @song.lyrics_sets.visible.sortedByVotes
       end
     end
   end
+
+  #PUT /lyrics_sets/:id/change_visibility
+   def change_visibility
+     set = LyricsSet.find(params[:id])
+     if set.visible
+       set.visible = false
+     else
+       set.visible = true
+     end
+     set.save
+     render json: set
+   end
 
   #PUT /lyrics_sets/:id/like  body: { "user_id": id}
   def upvote
