@@ -36,7 +36,7 @@ class SongsController < ApplicationController
     top_songs_dict.each do |dic|
       top_songs.push(dic[:song])
     end
-    render json: top_songs
+    render json: top_songs, each_serializer: SongInformationSerializer
   end
   # when a user clicks a song,
   # if no id stored, make an API to request an ID
