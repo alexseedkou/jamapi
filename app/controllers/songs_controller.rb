@@ -26,8 +26,21 @@ class SongsController < ApplicationController
   def get_top_songs
     songs_scores = []
     Song.all.each do |song|
-      score = song.tabs_sets.map(&:cached_votes_score).sum
-      song_score = {song: song, score: score}
+      #score = song.tabs_sets.map(&:cached_votes_score).sum
+
+      sum = 0
+      song.tabs_sets.each do |set|
+        if set.times == nil then
+          next
+        end
+
+        if set.times.count < 30 then #we validate here, a good tabs has at least 20 lines
+          next
+        end
+        sum += set.cached_votes_score
+      end
+
+      song_score = {song: song, score: sum}
       songs_scores.push(song_score)
     end
 
