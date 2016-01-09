@@ -21,6 +21,23 @@ class SongsController < ApplicationController
     end
   end
 
+  # GET /get_top_songs, no parameter
+  # currently sorted by all the scores of its tabs_sets in descending order
+  def get_top_songs
+    songs_scores = []
+    Song.all.each do |song|
+      score = song.tabs_sets.map(&:cached_votes_score).sum
+      song_score = {song: song, score: score}
+      songs_scores.push(song_score)
+    end
+
+    top_songs_dict = songs_scores.sort_by {|dic| dic[:score] }.reverse.first(100)
+    top_songs = []
+    top_songs_dict.each do |dic|
+      top_songs.push(dic[:song])
+    end
+    render json: top_songs
+  end
   # when a user clicks a song,
   # if no id stored, make an API to request an ID
   # return a song_id(whether newly created or existed)

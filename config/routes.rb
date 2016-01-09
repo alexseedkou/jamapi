@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :tabs_sets, except: [:new, :edit]
   resources :lyrics_sets, except: [:new, :edit]
 
+  get 'get_top_songs', to: 'songs#get_top_songs'
+  
   get 'get_most_liked_tabs_set', to: 'tabs_sets#get_most_liked_tabs_set'
   get 'get_most_liked_lyrics_set', to: 'lyrics_sets#get_most_liked_lyrics_set'
 
