@@ -27,21 +27,23 @@ class SongsController < ApplicationController
     songs_scores = []
     Song.all.each do |song|
       #score = song.tabs_sets.map(&:cached_votes_score).sum
-
       sum = 0
-      song.tabs_sets.each do |set|
-        if set.times == nil then
+      if song.tabs_sets.count == 0 then #if no tabs, just skip it
+        next
+      end
+      song.tabs_sets.each do |set| #validate a good tabs, if times is not empty and must be bigger than 20
+        unless set.times.nil?
+          if set.times.count > 20
+            sum += set.cached_votes_score
+          end
           next
         end
-
-        if set.times.count < 30 then #we validate here, a good tabs has at least 20 lines
-          next
-        end
-        sum += set.cached_votes_score
       end
 
-      song_score = {song: song, score: sum}
-      songs_scores.push(song_score)
+      if sum > 0 #if total score of all tabs is larger than 0, we add the song
+        song_score = { song: song, score: sum }
+        songs_scores.push(song_score)
+      end
     end
 
     top_songs_dict = songs_scores.sort_by {|dic| dic[:score] }.reverse.first(100)
@@ -51,6 +53,9 @@ class SongsController < ApplicationController
     end
     render json: top_songs, each_serializer: SongInformationSerializer
   end
+
+
+
   # when a user clicks a song,
   # if no id stored, make an API to request an ID
   # return a song_id(whether newly created or existed)
