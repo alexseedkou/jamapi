@@ -108,8 +108,17 @@ class TabsSetsController < ApplicationController
     current_user = User.find(params[:user_id])
     if current_user.voted_up_on? set #if this user already voted, remove the vote
       set.unliked_by current_user
+
+      # we use this to validate a good tabs or not
+      # because total_score will be aggregated for top songs
+      if set.times.size > 30
+        set.song.update_attributes(:total_score => set.song.total_score-1)
+      end
     else
       set.upvote_by current_user
+      if set.times.size > 30
+        set.song.update_attributes(:total_score => set.song.total_score+1)
+      end
     end
     render json: set, :user => current_user
   end
@@ -120,8 +129,14 @@ class TabsSetsController < ApplicationController
     current_user = User.find(params[:user_id])
     if current_user.voted_down_on? set #if this user already voted, remove the vote
       set.undisliked_by current_user
+      if set.times.size > 30
+        set.song.update_attributes(:total_score => set.song.total_score+1)
+      end
     else
       set.downvote_by current_user
+      if set.times.size > 30
+        set.song.update_attributes(:total_score => set.song.total_score-1)
+      end
     end
     render json: set, :user => current_user
   end
