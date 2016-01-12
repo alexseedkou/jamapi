@@ -22,9 +22,8 @@ class SongsController < ApplicationController
   end
 
   # GET /get_top_songs, no parameter
-  # currently sorted by all the scores of its tabs_sets in descending order
   def get_top_songs
-    render json: Song.order(:total_score).reverse.select {|song| song.tabs_sets.size > 0 },
+    render json: Song.order(:total_score).reverse.select{ |song| song.total_score > 1 },
      each_serializer: SongInformationSerializer
   end
 

@@ -35,19 +35,21 @@ class TabsSetsController < ApplicationController
     else
       # we only allow one tabsSet per song for one user
       # so if we found one already, we just update it
-      found_tabs_set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
-      if found_tabs_set.present?
-        found_tabs_set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
+      @set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
+      if @set.present?
+        @set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now, :visible => params[:visible])
-         render json: found_tabs_set
+         add_score
+         render json: @set
       else
-        tabs_set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
+        @set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
           :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now, :visible => params[:visible])
-        if tabs_set.save
-          render json: tabs_set, status: :created, location: tabs_set
+        if @set.save
+          add_score
+          render json: @set, status: :created, location: @set
         else
-          render json: tabs_set.errors, status: :unprocessable_entity
+          render json: @set.errors, status: :unprocessable_entity
         end
       end
     end
@@ -104,44 +106,47 @@ class TabsSetsController < ApplicationController
 
   #PUT /tabs_sets/:id/like  body: { "user_id": id}
   def upvote
-    set = TabsSet.find(params[:id])
+    @set = TabsSet.find(params[:id])
     current_user = User.find(params[:user_id])
-    if current_user.voted_up_on? set #if this user already voted, remove the vote
-      set.unliked_by current_user
-
-      # we use this to validate a good tabs or not
-      # because total_score will be aggregated for top songs
-      if set.times.size > 30
-        set.song.update_attributes(:total_score => set.song.total_score-1)
-      end
+    if current_user.voted_up_on? @set #if this user already voted, remove the vote
+      @set.unliked_by current_user
     else
-      set.upvote_by current_user
-      if set.times.size > 30
-        set.song.update_attributes(:total_score => set.song.total_score+1)
-      end
+      @set.upvote_by current_user
     end
-    render json: set, :user => current_user
+    add_score
+    render json: @set, :user => current_user
   end
 
   #PUT /tabs_sets/:id/dislike  body: { "user_id": id}
   def downvote
-    set = TabsSet.find(params[:id])
+    @set = TabsSet.find(params[:id])
     current_user = User.find(params[:user_id])
-    if current_user.voted_down_on? set #if this user already voted, remove the vote
-      set.undisliked_by current_user
-      if set.times.size > 30
-        set.song.update_attributes(:total_score => set.song.total_score+1)
-      end
+    if current_user.voted_down_on? @set #if this user already voted, remove the vote
+      @set.undisliked_by current_user
     else
-      set.downvote_by current_user
-      if set.times.size > 30
-        set.song.update_attributes(:total_score => set.song.total_score-1)
-      end
+      @set.downvote_by current_user
     end
-    render json: set, :user => current_user
+    add_score
+    render json: @set, :user => current_user
   end
 
   private
+  def add_score
+    song = @set.song
+    index = song.tabs_sets.index(@set)
+    #we add score only for qualifed and visible one, and add 0 for everything else
+    scoreToAdd = (@set.qualified && @set.visible) ? 2 + @set.cached_votes_score : 0
+    if song.tabs_sets[index].nil?
+      song.set_scores.push(scoreToAdd)
+      song.total_score = song.set_scores.inject(:+)
+      song.save
+    else
+      song.set_scores[index] = scoreToAdd
+      song.total_score = song.set_scores.inject(:+)
+      song.save
+    end
+  end
+
   def set_tabs_set
     @tabs_set = TabsSet.find(params[:id])
   end
