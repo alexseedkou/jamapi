@@ -41,8 +41,8 @@ class ApplicationController < ActionController::API
         # name, artist must exactly match and
         # the duration should be in one second range
         # of the one we have in database
-        matchedSongs = Song.where("title = ? AND artist = ? AND ( duration BETWEEN ? AND ? )",
-        params[:title], params[:artist], params[:duration].to_f - 1, params[:duration].to_f + 1)
+        matchedSongs = Song.where("LOWER(title) = ? AND LOWER(artist) = ? AND ( duration BETWEEN ? AND ? )",
+        params[:title].downcase, params[:artist].downcase, params[:duration].to_f - 1, params[:duration].to_f + 1)
 
         if matchedSongs.exists?
           @song = matchedSongs.first
