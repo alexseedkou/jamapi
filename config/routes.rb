@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :lyrics_sets, except: [:new, :edit]
 
   get 'get_top_songs', to: 'songs#get_top_songs'
+  get 'update_soundwave_url', to: 'songs#update_soundwave_url'
   
   get 'get_most_liked_tabs_set', to: 'tabs_sets#get_most_liked_tabs_set'
   get 'get_most_liked_lyrics_set', to: 'lyrics_sets#get_most_liked_lyrics_set'
@@ -14,8 +15,6 @@ Rails.application.routes.draw do
   get 'get_lyrics_sets', to: 'lyrics_sets#get_lyrics_sets'
   get 'attempt_login', to: 'users#attempt_login'
   get 'validate_email', to: 'users#validate_email'
-
-  get 'get_song_id', to: 'songs#get_song_id'
 
   resources :tabs_sets do
   member do

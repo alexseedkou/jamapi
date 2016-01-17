@@ -1,5 +1,5 @@
 class SongsController < ApplicationController
-  before_action :set_song, only: [:show, :update, :destroy]
+  before_action :set_song, only: [:show, :destroy]
 
   # GET /posts
   # GET /posts.json
@@ -12,12 +12,18 @@ class SongsController < ApplicationController
     render json: @song
   end
 
+  # POST /songs
   def create
-    @song = Song.new(song_params)
-    if @song.save
-      render json: @song, status: :created, location: @song
-    else
-      render json: @song.errors, status: :unprocessable_entity
+    find_first_or_create
+    render json: @song, serializer: SongInformationSerializer
+  end
+
+  # PUT /:id  body:  body: {title: "", artist: "", duration: "", soundwave_url: ""}
+  def update
+    find_first_or_create
+    if params[:soundwave_url].present?
+      @song.update_attributes(:soundwave_url, params[:soundwave_url])
+      render json: @song, serializer: SongInformationSerializer
     end
   end
 
@@ -27,19 +33,23 @@ class SongsController < ApplicationController
      each_serializer: SongInformationSerializer
   end
 
-  # when a user clicks a song,
-  # if no id stored, make an API to request an ID
-  # return a song_id(whether newly created or existed)
-  # store in device's database
-  # must return and id
-  # GET /get_song_id    body: {"title":"", "artist": "", "duration": 0.0 }
-  def get_song_id
+  # GET /get_soundwave_url
+  def get_soundwave_url
     find_first_or_create
-    render json:  { song_id: @song.id }
+    render json: @song, serializer: SongInformationSerializer
+  end
+
+  # we used a GET method to save, not sure this is the best option but it is simple
+  # GET /update_soundwave_url  body:  body: {title: "", artist: "", duration: "", soundwave_url: ""}
+  def update_soundwave_url
+    find_first_or_create
+    if params[:soundwave_url].present?
+      @song.update_attributes(:soundwave_url => params[:soundwave_url])
+      render json: @song, serializer: SongInformationSerializer
+    end
   end
 
   private
-
   def set_song
     @song = Song.find(params[:id])
   end
