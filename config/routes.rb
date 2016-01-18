@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   resources :lyrics_sets, except: [:new, :edit]
 
   get 'get_top_songs', to: 'songs#get_top_songs'
-  get 'update_soundwave_url', to: 'songs#update_soundwave_url'
-  
+  get 'get_soundwave_url', to: 'songs#get_soundwave_url'
+
   get 'get_most_liked_tabs_set', to: 'tabs_sets#get_most_liked_tabs_set'
   get 'get_most_liked_lyrics_set', to: 'lyrics_sets#get_most_liked_lyrics_set'
 

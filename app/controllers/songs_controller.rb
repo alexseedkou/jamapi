@@ -1,5 +1,5 @@
 class SongsController < ApplicationController
-  before_action :set_song, only: [:show, :destroy]
+  before_action :set_song, only: [:show, :update, :destroy]
 
   # GET /posts
   # GET /posts.json
@@ -18,11 +18,10 @@ class SongsController < ApplicationController
     render json: @song, serializer: SongInformationSerializer
   end
 
-  # PUT /:id  body:  body: {title: "", artist: "", duration: "", soundwave_url: ""}
+  # PUT /:id   body: {soundwave_url: ""}
   def update
-    find_first_or_create
     if params[:soundwave_url].present?
-      @song.update_attributes(:soundwave_url, params[:soundwave_url])
+      @song.update_attributes(:soundwave_url => params[:soundwave_url])
       render json: @song, serializer: SongInformationSerializer
     end
   end
@@ -39,22 +38,9 @@ class SongsController < ApplicationController
     render json: @song, serializer: SongInformationSerializer
   end
 
-  # we used a GET method to save, not sure this is the best option but it is simple
-  # GET /update_soundwave_url  body:  body: {title: "", artist: "", duration: "", soundwave_url: ""}
-  def update_soundwave_url
-    find_first_or_create
-    if params[:soundwave_url].present?
-      @song.update_attributes(:soundwave_url => params[:soundwave_url])
-      render json: @song, serializer: SongInformationSerializer
-    end
-  end
-
   private
   def set_song
     @song = Song.find(params[:id])
   end
 
-  def song_params
-    params.require(:song).permit(:title, :artist, :duration)
-  end
 end
