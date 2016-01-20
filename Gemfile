@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 #gem 'elasticsearch-rails'
 #gem 'bonsai-elasticsearch-rails' #for heroku's bonsai to work with 9200 host
 
+#for environmental variables
+gem "figaro"
+
 gem 'acts_as_votable', '~> 0.10.0'
 
 gem 'active_model_serializers', '~> 0.8.3'

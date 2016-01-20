@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
   #get :token, controller: 'application'
   resources :users, except: [:new, :edit]
   resources :songs, except: [:new, :edit]
   resources :tabs_sets, except: [:new, :edit]
   resources :lyrics_sets, except: [:new, :edit]
-
+  resources :password_resets
   get 'get_top_songs', to: 'songs#get_top_songs'
   get 'get_soundwave_url', to: 'songs#get_soundwave_url'
 
