@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::API
-
   #example in command line
   #curl http://localhost:3000/songs -H 'Authorization: Token token=46276600eaae312ff6e532d598cca7ec'
   # include ActionController::HttpAuthentication::Basic::ControllerMethods
@@ -32,6 +31,7 @@ class ApplicationController < ActionController::API
 #         return true
 #       end
 #     end
+
   private
     #used in tabs_sets_controller and lyrics_sets_controller to find the song, if not found, create the song
 

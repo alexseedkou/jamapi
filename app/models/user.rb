@@ -17,9 +17,16 @@ class User < ActiveRecord::Base
   has_many :lyrics_sets
 
   def send_password_reset
-    update_attributes(:password_reset_token => SecureRandom.hex,
-    :password_reset_sent_at => Time.zone.now)
+    update_attribute(:password_reset_token, SecureRandom.hex)
+    update_attribute(:password_reset_sent_at, Time.zone.now)
     UserMailer.password_reset(self).deliver_later
+  end
+
+  def update_password(params)
+    self.password = params[:password]
+    self.password_reset_token = nil
+    self.password_reset_sent_at = nil
+    self.save
   end
 
   private

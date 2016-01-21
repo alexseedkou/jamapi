@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   resources :songs, except: [:new, :edit]
   resources :tabs_sets, except: [:new, :edit]
   resources :lyrics_sets, except: [:new, :edit]
-  resources :password_resets
+  resources :password_resets, only: [:create, :edit]
+
+  post 'reset_password/:id', to: 'password_resets#update', as: :reset_password
+
   get 'get_top_songs', to: 'songs#get_top_songs'
   get 'get_soundwave_url', to: 'songs#get_soundwave_url'
 
