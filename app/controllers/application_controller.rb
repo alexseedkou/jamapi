@@ -34,9 +34,9 @@ class ApplicationController < ActionController::API
 
   private
     #used in tabs_sets_controller and lyrics_sets_controller to find the song, if not found, create the song
-
+    #must create a song object no matter what
     def find_first_or_create
-      if params[:title].present? && params[:artist].present? && params[:duration].present?
+      unless params[:title].nil? && params[:artist].nil? && params[:duration].nil?
         # check if we already have this song,
         # name, artist must exactly match and
         # the duration should be in one second range

@@ -106,7 +106,7 @@ class UsersController < ApplicationController
       render json: { result: "liked"}
     end
   end
-  
+
   #GET user/:id/favorite_songs
   def favorite_songs
     songs = @user.get_up_voted Song
