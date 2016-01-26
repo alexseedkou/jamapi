@@ -54,15 +54,6 @@ class ApplicationController < ActionController::API
 
     # We want to find the matched song in iTunes and store the iTunes song's information
     # in our database
-    def add_preview_url_store_link(trackId)
-      uri = "https://itunes.apple.com/lookup?id=#{trackId}"
-      jsonResult = JSON.parse(HTTP.get(uri).to_s)
-      jsonResult["results"].each do |result|
-        song = Song.where(track_id: trackId).first
-        song.update_attributes(:preview_url => result['previewUrl'], :store_link => result['trackViewUrl'])
-      end
-    end
-
     def find_song_in_iTunes(title, artist, duration)
       #for testing purpose
       if duration == nil || title == nil || artist == nil
@@ -80,6 +71,8 @@ class ApplicationController < ActionController::API
         r_album = result['collectionName']
         r_artwork = result['artworkUrl100']
         r_duration = (result["trackTimeMillis"].to_f)/1000
+        r_preview = result['previewUrl']
+        r_store_link = result['trackViewUrl']
 
         if (r_duration - duration.to_f).abs <= 2
           #for reinitialize database
@@ -105,7 +98,8 @@ class ApplicationController < ActionController::API
             title_alias = (r_title.downcase.include? title.downcase) ? r_title : r_title + title
             artist_alias = (r_artist.downcase.include? artist.downcase) ? r_artist : r_artist + artist
             @song = Song.create(title: r_title, artist: r_artist, duration: r_duration, in_iTunes: true,
-            :title_aliases => title_alias, :artist_aliases => artist_alias, track_id: r_id, album: r_album, artwork_url: r_artwork)
+            title_aliases: title_alias, artist_aliases: artist_alias, track_id: r_id, album: r_album,
+             artwork_url: r_artwork, preview_url: r_preview, store_link: r_store_link)
           end
           return
         end
