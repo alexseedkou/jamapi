@@ -74,9 +74,9 @@ class ApplicationController < ActionController::API
 
         if (r_duration - duration.to_f).abs <= 2
           #for reinitialize database
-          alreadyAdded = Song.where('LOWER(title) = ? AND LOWER(artist) = ? AND ( duration BETWEEN ? AND ? )',
-          title.downcase, artist.downcase, duration.to_f - 2 , duration.to_f + 2).first
-          #alreadyAdded = Song.where(track_id: r_id).first
+          # alreadyAdded = Song.where('LOWER(title) = ? AND LOWER(artist) = ? AND ( duration BETWEEN ? AND ? )',
+          # title.downcase, artist.downcase, duration.to_f - 2 , duration.to_f + 2).first
+          alreadyAdded = Song.where(track_id: r_id).first
           unless alreadyAdded.nil?
             #if the aliases do not contain the terms yet, we add the new aliases
             unless alreadyAdded.title_aliases.downcase.include? title.downcase
@@ -88,11 +88,11 @@ class ApplicationController < ActionController::API
             @song = alreadyAdded
 
             #for reinitialize all the database
-            title_alias = (r_title.downcase.include? title.downcase) ? r_title : r_title + title
-            artist_alias = (r_artist.downcase.include? artist.downcase) ? r_artist : r_artist + artist
-            @song.update_attributes(title: r_title, artist: r_artist, duration: r_duration, in_iTunes: true,
-            :title_aliases => title_alias, :artist_aliases => artist_alias, track_id: r_id, album: r_album, artwork_url: r_artwork)
-          else # this song has never been added before
+          #   title_alias = (r_title.downcase.include? title.downcase) ? r_title : r_title + title
+          #   artist_alias = (r_artist.downcase.include? artist.downcase) ? r_artist : r_artist + artist
+          #   @song.update_attributes(title: r_title, artist: r_artist, duration: r_duration, in_iTunes: true,
+          #   :title_aliases => title_alias, :artist_aliases => artist_alias, track_id: r_id, album: r_album, artwork_url: r_artwork)
+           else # this song has never been added before
             title_alias = (r_title.downcase.include? title.downcase) ? r_title : r_title + title
             artist_alias = (r_artist.downcase.include? artist.downcase) ? r_artist : r_artist + artist
             @song = Song.create(title: r_title, artist: r_artist, duration: r_duration, in_iTunes: true,
