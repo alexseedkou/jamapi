@@ -54,6 +54,15 @@ class ApplicationController < ActionController::API
 
     # We want to find the matched song in iTunes and store the iTunes song's information
     # in our database
+    def add_preview_url_store_link(trackId)
+      uri = "https://itunes.apple.com/lookup?id=#{trackId}"
+      jsonResult = JSON.parse(HTTP.get(uri).to_s)
+      jsonResult["results"].each do |result|
+        song = Song.where(track_id: trackId).first
+        song.update_attributes(:preview_url => result['previewUrl'], :store_link => result['trackViewUrl'])
+      end
+    end
+
     def find_song_in_iTunes(title, artist, duration)
       #for testing purpose
       if duration == nil || title == nil || artist == nil
