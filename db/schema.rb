@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119221534) do
+ActiveRecord::Schema.define(version: 20160126202230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,13 +47,18 @@ ActiveRecord::Schema.define(version: 20160119221534) do
   create_table "songs", force: :cascade do |t|
     t.string   "title"
     t.string   "artist"
-    t.string   "album"
+    t.string   "album",          default: ""
     t.float    "duration"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.integer  "set_scores",    default: [],              array: true
-    t.integer  "total_score",   default: 0
-    t.string   "soundwave_url", default: ""
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "set_scores",     default: [],                 array: true
+    t.integer  "total_score",    default: 0
+    t.string   "soundwave_url",  default: ""
+    t.boolean  "in_iTunes",      default: false
+    t.string   "title_aliases",  default: ""
+    t.string   "artist_aliases", default: ""
+    t.integer  "track_id",       default: 0
+    t.string   "artwork_url",    default: ""
   end
 
   add_index "songs", ["artist"], name: "index_songs_on_artist", using: :btree
