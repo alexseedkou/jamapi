@@ -28,7 +28,7 @@ class SongsController < ApplicationController
 
   # GET /get_top_songs, no parameter
   def get_top_songs
-    render json: Song.order(total_score: :desc).where('total_score > 1').limit(100),
+    render json: Song.order(total_score: :desc).where('total_score > 1 AND track_id > 10').limit(100),
      each_serializer: SongInformationSerializer
   end
 
