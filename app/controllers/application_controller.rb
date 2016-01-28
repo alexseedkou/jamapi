@@ -105,6 +105,6 @@ class ApplicationController < ActionController::API
         end
       end#end of loop
       #if we cannot locate this song in iTunes library, we create a new one
-      @song = Song.create(title: title, artist: artist, duration: duration.to_f)
+      @song = Song.create(title: title, artist: artist, duration: duration.to_f, title_aliases: title, artist_aliases: artist)
     end
 end
