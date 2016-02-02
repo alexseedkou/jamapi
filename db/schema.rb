@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(version: 20160126231011) do
     t.float    "duration"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.integer  "set_scores",     default: [],                 array: true
     t.integer  "total_score",    default: 0
     t.string   "soundwave_url",  default: ""
     t.boolean  "in_iTunes",      default: false
@@ -61,6 +60,7 @@ ActiveRecord::Schema.define(version: 20160126231011) do
     t.string   "artwork_url",    default: ""
     t.string   "preview_url",    default: ""
     t.string   "store_link",     default: ""
+    t.integer  "set_scores",     default: [],                 array: true
   end
 
   add_index "songs", ["artist"], name: "index_songs_on_artist", using: :btree

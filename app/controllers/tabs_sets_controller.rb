@@ -39,14 +39,14 @@ class TabsSetsController < ApplicationController
       if @set.present?
         @set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now, :visible => params[:visible])
-         add_score
+         aggregate_score
          render json: @set
       else
         @set = TabsSet.new(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs],
           :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now, :visible => params[:visible])
         if @set.save
-          add_score
+          aggregate_score
           render json: @set, status: :created, location: @set
         else
           render json: @set.errors, status: :unprocessable_entity
@@ -113,7 +113,7 @@ class TabsSetsController < ApplicationController
     else
       @set.upvote_by current_user
     end
-    add_score
+    aggregate_score
     render json: @set, :user => current_user
   end
 
@@ -126,25 +126,20 @@ class TabsSetsController < ApplicationController
     else
       @set.downvote_by current_user
     end
-    add_score
+    aggregate_score
     render json: @set, :user => current_user
   end
 
   private
-  def add_score
+  def aggregate_score
     song = @set.song
-    index = song.tabs_sets.index(@set)
-    #we add score only for qualifed and visible one, and add 0 for everything else
-    scoreToAdd = (@set.qualified && @set.visible) ? 2 + @set.cached_votes_score : 0
-    if song.tabs_sets[index].nil?
-      song.set_scores.push(scoreToAdd)
-      song.total_score = song.set_scores.inject(:+)
-      song.save
-    else
-      song.set_scores[index] = scoreToAdd
-      song.total_score = song.set_scores.inject(:+)
-      song.save
+    total_score = 0
+    song.tabs_sets.each do |t|
+      if t.qualified && t.visible
+        total_score += 2 + t.cached_votes_score
+      end
     end
+    song.update_attributes(:total_score => total_score)
   end
 
   def set_tabs_set
