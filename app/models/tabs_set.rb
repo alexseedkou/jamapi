@@ -19,15 +19,13 @@ class TabsSet < ActiveRecord::Base
     return false
   end
 
+  #return unique chords for the song
   def chords_preview
     #get first 8 chords of the song and concatenate to a string
     preview = ""
     unless chords.nil?
-      for i in 0..chords.count-1
-        if i >= 10
-          break
-        end
-          preview += chords[i] + "  "
+      chords.to_set.each do |chord|
+        preview += chord + "  "
       end
     end
     return preview
