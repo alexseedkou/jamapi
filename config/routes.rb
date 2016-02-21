@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post 'reset_password/:id', to: 'password_resets#update', as: :reset_password
 
   get 'get_top_songs', to: 'songs#get_top_songs'
+  get 'get_new_songs', to: 'songs#get_new_songs'
   get 'get_soundwave_url', to: 'songs#get_soundwave_url'
 
   get 'get_most_liked_tabs_set', to: 'tabs_sets#get_most_liked_tabs_set'

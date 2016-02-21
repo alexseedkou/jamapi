@@ -8,17 +8,6 @@ class TabsSet < ActiveRecord::Base
   scope :sortedByVotes, lambda { order("cached_votes_score DESC") }
   scope :visible, -> { where(visible: true) }
 
-  def qualified#we use 30 to determine if this is a good tabs
-    unless times.nil?
-      if times.size > 30
-        return true
-      else
-        return false
-      end
-    end
-    return false
-  end
-
   #return unique chords for the song
   def chords_preview
     #get first 8 chords of the song and concatenate to a string

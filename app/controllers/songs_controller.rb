@@ -32,6 +32,11 @@ class SongsController < ApplicationController
      each_serializer: SongInformationSerializer
   end
 
+  # GET /get_new_songs
+  def get_new_songs #new songs with tabs
+    render json: Song.where('first_tabs_added_at IS NOT NULL').order('first_tabs_added_at DESC')
+  end
+
   # GET /get_soundwave_url
   def get_soundwave_url
     find_first_or_create
