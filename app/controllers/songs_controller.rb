@@ -28,14 +28,21 @@ class SongsController < ApplicationController
 
   # GET /get_top_songs, no parameter
   def get_top_songs
-    render json: Song.order(total_score: :desc).where('total_score > 1 AND track_id > 10').limit(100),
-     each_serializer: SongInformationSerializer
+    if params[:page].nil?
+      render json: Song.order(total_score: :desc).where('total_score > 1 AND track_id > 10').limit(100),
+       each_serializer: SongInformationSerializer
+    else
+      render json: Song.order(total_score: :desc).where('total_score > 1 AND track_id > 10')
+      .page(params[:page]).per(100),
+      each_serializer: SongInformationSerializer
+    end
   end
 
   # GET /get_new_songs
   def get_new_songs #new songs with tabs
     render json: Song.joins(:tabs_sets).where('tabs_sets.qualified' => true, 'tabs_sets.visible' => true)
-    .order('tabs_sets.updated_at DESC')
+    .order('tabs_sets.updated_at DESC').page(params[:page]).per(100),
+     each_serializer: SongInformationSerializer
   end
 
   # GET /get_soundwave_url

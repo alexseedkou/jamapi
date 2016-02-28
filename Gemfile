@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 #gem 'elasticsearch-rails'
 #gem 'bonsai-elasticsearch-rails' #for heroku's bonsai to work with 9200 host
 
+#for paging
+gem 'kaminari'
+
 gem "http"
 #for environmental variables
 gem "figaro"
