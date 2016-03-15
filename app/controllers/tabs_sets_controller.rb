@@ -70,7 +70,7 @@ class TabsSetsController < ApplicationController
 
 
   def get_fresh_chords
-      render json: TabsSet.qualifiedAndVisible.order(last_edited: :desc)
+      render json: TabsSet.qualifiedAndVisible.order(last_edited: :desc).page(params[:page]).per(100)
   end
 
   # GET server/get_most_liked_tabs_set

@@ -38,7 +38,7 @@ class SongsController < ApplicationController
     end
   end
 
-  # GET /get_new_songs
+  # GET /get_new_songs, NOT USED ANYMORE..
   def get_new_songs #new songs with tabs
     render json: Song.joins(:tabs_sets).where('tabs_sets.qualified' => true, 'tabs_sets.visible' => true)
     .order('tabs_sets.updated_at DESC').page(params[:page]).per(100),
