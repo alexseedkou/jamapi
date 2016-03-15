@@ -7,6 +7,7 @@ class TabsSet < ActiveRecord::Base
 
   scope :sortedByVotes, lambda { order("cached_votes_score DESC") }
   scope :visible, -> { where(visible: true) }
+  scope :qualifiedAndVisible, -> { where('qualified = true AND visible = true') }
 
   #return unique chords for the song
   def chords_preview

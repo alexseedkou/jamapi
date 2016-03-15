@@ -49,7 +49,6 @@ class TabsSetsController < ApplicationController
           :song_id => @song.id, :user_id => params[:user_id], :last_edited => Time.now,
           :visible => params[:visible], :qualified => qualified)
         if @set.save
-          set_first_tabs_added_date
           aggregate_score
           render json: @set, status: :created, location: @set
         else
@@ -67,6 +66,11 @@ class TabsSetsController < ApplicationController
     else
       render json: { result: "cannot destroy"}
     end
+  end
+
+
+  def get_fresh_chords
+      render json: TabsSet.qualifiedAndVisible.order(last_edited: :desc)
   end
 
   # GET server/get_most_liked_tabs_set
@@ -144,13 +148,6 @@ class TabsSetsController < ApplicationController
       end
     end
     song.update_attributes(:total_score => total_score)
-  end
-
-  #when first good tabs is submitted, we list the song as New Song
-  def set_first_tabs_added_date
-    if @set.visible && @set.qualified && @song.tabs_sets.count == 1 && @song.in_iTunes
-      @song.update_attributes(:first_tabs_added_at => @set.created_at)
-    end
   end
 
   def set_tabs_set
