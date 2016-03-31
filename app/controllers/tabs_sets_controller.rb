@@ -36,7 +36,13 @@ class TabsSetsController < ApplicationController
       # we only allow one tabsSet per song for one user
       # so if we found one already, we just update it
       @set = TabsSet.where(song_id: @song.id, user_id: params[:user_id]).first
-      qualified = params[:times].count > 20 && params[:times].last.to_f > @song.duration / 2
+
+      if @song.in_iTunes
+        qualified = params[:times].count > 20 && params[:times].last.to_f > @song.duration / 2
+      else
+        qualified = false
+      end
+
       if @set.present?
         @set.update_attributes(:tuning => params[:tuning], :capo => params[:capo],
          :times => params[:times], :chords => params[:chords], :tabs => params[:tabs], :last_edited => Time.now,
